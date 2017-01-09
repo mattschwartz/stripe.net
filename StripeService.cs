@@ -123,6 +123,20 @@ namespace Stripe.Net
             }
         }
 
+        /// <summary>
+        /// Updates a <see cref="Card"/> with the supplied values for the 
+        /// specified customer.
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="cardId"></param>
+        /// <param name="city"></param>
+        /// <param name="country"></param>
+        /// <param name="lineOne"></param>
+        /// <param name="lineTwo"></param>
+        /// <param name="zip"></param>
+        /// <param name="expirationMonth"></param>
+        /// <param name="expirationYear"></param>
+        /// <returns></returns>
         public async Task UpdateCardAsync(
             string customerId,
             string cardId,
@@ -247,6 +261,15 @@ namespace Stripe.Net
             return result;
         }
 
+        /// <summary>
+        /// Updates <see cref="BankAccount"/> credentials with the supplied
+        /// values for the specified customer.
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="bankAccountId"></param>
+        /// <param name="accountHolderName"></param>
+        /// <param name="accountHolderType"></param>
+        /// <returns></returns>
         public async Task<BankAccount> UpdateBankAccountAsync(
             string customerId,
             string bankAccountId,
@@ -288,6 +311,13 @@ namespace Stripe.Net
             return result;
         }
 
+        /// <summary>
+        /// Removes the <see cref="BankAccount"/> from the specified customer
+        /// with the specified bank account id
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="bankAccountId"></param>
+        /// <returns></returns>
         public async Task DeleteBankAccountAsync(string customerId, string bankAccountId)
         {
             await _client.DeleteAsync($"customers/{customerId}/sources/{bankAccountId}");
