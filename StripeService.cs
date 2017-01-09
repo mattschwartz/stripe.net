@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using Stripe.Net.BankAccounts;
 using Stripe.Net.Cards;
 using Stripe.Net.Customers;
 using Stripe.Net.Http;
@@ -17,6 +17,14 @@ namespace Stripe.Net
             _client = new Client(apiKey);
         }
 
+        /// <summary>
+        /// Creates a new, empty customer object from the provided email and
+        /// description. Will not create a new customer if the email address
+        /// is taken.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="description"></param>
+        /// <returns></returns>
         public async Task CreateCustomerAsync(string email, string description)
         {
             bool emailTaken = await EmailExistsAsync(email);
@@ -37,6 +45,12 @@ namespace Stripe.Net
             }
         }
 
+        /// <summary>
+        /// Retrieves the customer id with the provided id, or null if no
+        /// customer with that id exists.
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <returns></returns>
         public async Task<Customer> GetCustomerAsync(string customerId)
         {
             var result = await _client.GetJsonAsync<Customer>($"customers/{customerId}");
@@ -48,6 +62,15 @@ namespace Stripe.Net
             return result;
         }
 
+        /// <summary>
+        /// Adds a new credit/debit card to the specified customer.
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="expirationMonth">An integer 1-12</param>
+        /// <param name="expirationYear">A four digit number in the future</param>
+        /// <param name="cvc">A 3-4 digit confirmation number</param>
+        /// <param name="number"></param>
+        /// <returns></returns>
         public async Task AddCardAsync(
             string customerId,
             int expirationMonth,
@@ -71,6 +94,7 @@ namespace Stripe.Net
             string token = tokenResult.id;
 
             formData = new List<KeyValuePair<string, string>>();
+
             formData.Add(new KeyValuePair<string, string>("source", token));
 
             var result = await _client.PostFormDataAsync<object>($"customers/{customerId}/sources", formData);
@@ -80,13 +104,127 @@ namespace Stripe.Net
             }
         }
 
+        /// <summary>
+        /// Retrieves the card for the specified customer and card id
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="cardId"></param>
+        /// <returns></returns>
         public async Task GetCardAsync(string customerId, string cardId)
         {
             var result = await _client.GetJsonAsync<Card>($"customers/{customerId}/sources/{cardId}");
 
+            if (result.Object != "card") {
+                // retrieved bankaccount
+            }
+
             if (_client.HasError) {
                 // failed
             }
+        }
+
+        public async Task UpdateCardAsync(
+            string customerId, 
+            string cardId,
+            string city = null,
+            string country = null,
+            string lineOne = null,
+            string lineTwo = null,
+            string zip = null,
+            int? expirationMonth = null,
+            int? expirationYear = null)
+        {
+            var formData = new List<KeyValuePair<string, string>>();
+
+            if (city != null) {
+                formData.Add(new KeyValuePair<string, string>("address_city", city));
+            }
+            if (country != null) {
+                formData.Add(new KeyValuePair<string, string>("address_country", country));
+            }
+            if (lineOne != null) {
+                formData.Add(new KeyValuePair<string, string>("address_line1", lineOne));
+            }
+            if (lineTwo != null) {
+                formData.Add(new KeyValuePair<string, string>("address_line2", lineTwo));
+            }
+            if (zip != null) {
+                formData.Add(new KeyValuePair<string, string>("address_zip", zip));
+            }
+            if (expirationMonth != null) {
+                formData.Add(new KeyValuePair<string, string>("exp_month", expirationMonth.ToString()));
+            }
+            if (expirationYear != null) {
+                formData.Add(new KeyValuePair<string, string>("exp_year", expirationYear.ToString()));
+            }
+
+            if (!formData.Any()) {
+                return;
+            }
+
+            var result = await _client.PostFormDataAsync<Card>($"customers/{customerId}/{cardId}", formData);
+
+            if (_client.HasError) {
+                // failed
+            }
+        }
+
+        public async Task DeleteCardAsync(string customerId, string cardId)
+        {
+            await _client.DeleteAsync($"customers/{customerId}/sources/{cardId}");
+
+            if (_client.HasError) {
+                // error
+            }
+        }
+
+        public async Task AddBankAccountAsync(
+            string customerId,
+            string accountHolderName,
+            AccountHolderType accountHolderType,
+            string accountNumber,
+            string routingNumber,
+            string country = "US",
+            string currency= "usd")
+        {
+            var formData = new List<KeyValuePair<string, string>>();
+
+            string accountHolderTypeValue;
+            switch (accountHolderType) {
+                case AccountHolderType.Individual:
+                    accountHolderTypeValue = "Individual";
+                    break;
+
+                case AccountHolderType.Company:
+                default:
+                    accountHolderTypeValue = "Company";
+                    break;
+            }
+
+            formData.Add(new KeyValuePair<string, string>("source[object]", "bank_account"));
+            formData.Add(new KeyValuePair<string, string>("source[currency]", currency));
+            formData.Add(new KeyValuePair<string, string>("source[country]", country));
+            formData.Add(new KeyValuePair<string, string>("source[account_holder_name]", accountHolderName));
+            formData.Add(new KeyValuePair<string, string>("source[account_holder_type]", accountHolderTypeValue));
+            formData.Add(new KeyValuePair<string, string>("source[account_number]", accountNumber));
+            formData.Add(new KeyValuePair<string, string>("source[routing_number]", routingNumber));
+
+            var result = await _client.PostFormDataAsync<BankAccount>($"customers/{customerId}/sources", formData);
+
+            if (_client.HasError) {
+                // failed
+                return;
+            }
+        }
+
+        public async Task GetBankAccountAsync(string customerId, string bankAccountId)
+        {
+
+        }
+
+        public async Task UpdateBankAccountAsync(string customerId, string bankAccountId)
+        {
+
         }
 
         private async Task<bool> EmailExistsAsync(string email)

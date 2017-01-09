@@ -85,6 +85,7 @@
 -r:"C:\Users\Matt\.nuget\packages\System.Threading.Timer\4.0.1\ref\netstandard1.2\System.Threading.Timer.dll"
 -r:"C:\Users\Matt\.nuget\packages\System.Xml.ReaderWriter\4.0.11\ref\netstandard1.3\System.Xml.ReaderWriter.dll"
 -r:"C:\Users\Matt\.nuget\packages\System.Xml.XDocument\4.0.11\ref\netstandard1.3\System.Xml.XDocument.dll"
+"C:\Users\Matt\Documents\GitHub\stripe.net\AccountHolderType.cs"
 "C:\Users\Matt\Documents\GitHub\stripe.net\BankAccountStatus.cs"
 "C:\Users\Matt\Documents\GitHub\stripe.net\CvcCheckStatus.cs"
 "C:\Users\Matt\Documents\GitHub\stripe.net\StripeErrorResult.cs"

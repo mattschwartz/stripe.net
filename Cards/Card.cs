@@ -19,11 +19,20 @@ namespace Stripe.Net.Cards
         [JsonProperty("exp_year")]
         public int ExpirationYear { get; set; }
 
-        [JsonProperty("last4")]
-        public string LastFour { get; set; }
+        [JsonProperty("address_city")]
+        public string AddressCity { get; set; }
 
-        [JsonProperty("fingerprint")]
-        public string Fingerprint { get; set; }
+        [JsonProperty("address_country")]
+        public string AddressCountry { get; set; }
+
+        [JsonProperty("address_line1")]
+        public string AddressLineOne { get; set; }
+
+        [JsonProperty("address_line2")]
+        public string AddressLineTwo { get; set; }
+
+        [JsonProperty("address_zip")]
+        public string AddressZip { get; set; }
 
         public CvcCheckStatus CvcCheck
         {

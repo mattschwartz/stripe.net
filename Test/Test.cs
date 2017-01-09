@@ -12,16 +12,11 @@ namespace Stripe.Net.Test
 
                 var stripe = new StripeService(apiKey);
 
-                //stripe.AddCardAsync(
-                //    "cus_9slVwRKZeS6dxa",
-                //    8,
-                //    2019,
-                //    123,
-                //    "4242424242424242").Wait();
-
-                stripe.GetCardAsync("cus_9slVwRKZeS6dxa", "card_19a4zPJB5O7unlMs4tvH3BEE").Wait();
+                stripe.AddBankAccountAsync("cus_9slVwRKZeS6dxa", "testing1", AccountHolderType.Company,
+                    "000123456789", "110000000").Wait();
 
                 Customer customer = stripe.GetCustomerAsync("cus_9slVwRKZeS6dxa").Result;
+
                 Console.WriteLine("Found customer {0}, {1}, {2}, {3}",
                     customer.Id, customer.Email, customer.Description,
                     customer.Created);

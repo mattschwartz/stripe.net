@@ -113,5 +113,26 @@ namespace Stripe.Net.Http
                 return JsonConvert.DeserializeObject<T>(responseJson);
             }
         }
+
+        internal async Task DeleteAsync(string requestUri)
+        {
+            _lastError = null;
+
+            using (var http = new HttpClient()) {
+                http.BaseAddress = new Uri(_stripeBaseUrl);
+
+                http.DefaultRequestHeaders.Accept.Clear();
+                http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                http.DefaultRequestHeaders.Add("authorization", $"Bearer {_apiKey}");
+
+                HttpResponseMessage response = await http.DeleteAsync(requestUri);
+                string responseJson = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode) {
+                    var error = JsonConvert.DeserializeObject<StripeErrorResultContainer>(responseJson);
+                    _lastError = error?.Error;
+                }
+            }
+        }
     }
 }

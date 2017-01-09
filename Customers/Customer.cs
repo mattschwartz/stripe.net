@@ -56,31 +56,10 @@ namespace Stripe.Net.Customers
                             BankName = source.bank_name,
                             AccountHolderName = source.account_holder_name,
                             RoutingNumber = source.routing_number,
-                            FingerPrint = source.fingerprint,
-                            LastFour = source.last4
+                            Fingerprint = source.fingerprint,
+                            LastFour = source.last4,
+                            _status = source.status
                         };
-                        switch ((string) source.status) {
-                            case "new":
-                                bankAccount.Status = BankAccountStatus.New;
-                                break;
-
-                            case "validated":
-                                bankAccount.Status = BankAccountStatus.Validated;
-                                break;
-
-                            case "verified":
-                                bankAccount.Status = BankAccountStatus.Verified;
-                                break;
-
-                            case "verification_failed":
-                                bankAccount.Status = BankAccountStatus.VerificationFailed;
-                                break;
-
-                            case "errored":
-                            default:
-                                bankAccount.Status = BankAccountStatus.Errored;
-                                break;
-                        }
 
                         result.Add(bankAccount);
                     }
