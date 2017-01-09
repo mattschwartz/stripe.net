@@ -91,11 +91,16 @@
 --reference:C:\Users\Matt\.nuget\packages\System.Xml.ReaderWriter\4.0.11\ref\netstandard1.3\System.Xml.ReaderWriter.dll
 --reference:C:\Users\Matt\.nuget\packages\System.Xml.XDocument\4.0.11\ref\netstandard1.3\System.Xml.XDocument.dll
 C:\Users\Matt\Documents\GitHub\stripe.net\BankAccountStatus.cs
+C:\Users\Matt\Documents\GitHub\stripe.net\CvcCheckStatus.cs
+C:\Users\Matt\Documents\GitHub\stripe.net\StripeErrorResult.cs
+C:\Users\Matt\Documents\GitHub\stripe.net\StripeListObject.cs
 C:\Users\Matt\Documents\GitHub\stripe.net\StripePaymentMethod.cs
 C:\Users\Matt\Documents\GitHub\stripe.net\StripeService.cs
 C:\Users\Matt\Documents\GitHub\stripe.net\BankAccounts\BankAccount.cs
 C:\Users\Matt\Documents\GitHub\stripe.net\CreditCards\Card.cs
 C:\Users\Matt\Documents\GitHub\stripe.net\Customers\Customer.cs
+C:\Users\Matt\Documents\GitHub\stripe.net\Customers\CustomerListObject.cs
+C:\Users\Matt\Documents\GitHub\stripe.net\Customers\CustomerListResult.cs
 C:\Users\Matt\Documents\GitHub\stripe.net\Http\Client.cs
 C:\Users\Matt\Documents\GitHub\stripe.net\Http\JsonContent.cs
 C:\Users\Matt\Documents\GitHub\stripe.net\Test\Test.cs

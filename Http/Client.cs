@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -14,6 +16,32 @@ namespace Stripe.Net.Http
         internal Client(string apiKey)
         {
             _apiKey = apiKey;
+        }
+
+        internal async Task<T> PostFormDataAsync<T>(
+            string requestUri,
+            IEnumerable<KeyValuePair<string, string>> values)
+            where T : class
+        {
+            using (var http = new HttpClient()) {
+                http.BaseAddress = new Uri(_stripeBaseUrl);
+
+                http.DefaultRequestHeaders.Accept.Clear();
+                http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                http.DefaultRequestHeaders.Add("authorization", $"Bearer {_apiKey}");
+
+                var content = new FormUrlEncodedContent(values);
+                HttpResponseMessage response = await http.PostAsync(requestUri, content);
+
+                if (!response.IsSuccessStatusCode) {
+                    return null;
+                }
+
+                string responseJson = await response.Content.ReadAsStringAsync();
+
+                return JsonConvert.DeserializeObject<T>(responseJson);
+
+            }
         }
 
         internal async Task<T> PostJsonAsync<T>(string requestUri, object data)
@@ -50,12 +78,12 @@ namespace Stripe.Net.Http
                 http.DefaultRequestHeaders.Add("authorization", $"Bearer {_apiKey}");
 
                 HttpResponseMessage response = await http.GetAsync(requestUri);
+                string responseJson = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode) {
+                    var error = JsonConvert.DeserializeObject<StripeErrorResultContainer>(responseJson);
                     return null;
                 }
-
-                string responseJson = await response.Content.ReadAsStringAsync();
 
                 return JsonConvert.DeserializeObject<T>(responseJson);
             }

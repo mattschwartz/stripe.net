@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using Stripe.Net.Cards;
 using Stripe.Net.BankAccounts;
 
-namespace Stripe.Net
+namespace Stripe.Net.Customers
 {
     public class Customer
     {
@@ -27,7 +27,7 @@ namespace Stripe.Net
         public object Metadata { get; set; }
 
         [JsonProperty("sources")]
-        public List<dynamic> _sources { private get; set; } = new List<dynamic>();
+        public dynamic _sources { private get; set; }
 
         public List<StripePaymentMethod> Sources
         {
@@ -35,7 +35,7 @@ namespace Stripe.Net
             {
                 var result = new List<StripePaymentMethod>();
 
-                foreach (var source in _sources) {
+                foreach (var source in _sources.data) {
                     if (source["object"] == "card") {
                         var card = new Card
                         {
