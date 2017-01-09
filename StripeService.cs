@@ -80,6 +80,15 @@ namespace Stripe.Net
             }
         }
 
+        public async Task GetCardAsync(string customerId, string cardId)
+        {
+            var result = await _client.GetJsonAsync<Card>($"customers/{customerId}/sources/{cardId}");
+
+            if (_client.HasError) {
+                // failed
+            }
+        }
+
         private async Task<bool> EmailExistsAsync(string email)
         {
             string normalizedEmail = email.ToLower();

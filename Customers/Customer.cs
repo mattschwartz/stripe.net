@@ -44,27 +44,9 @@ namespace Stripe.Net.Customers
                             ExpirationMonth = (int) source.exp_month,
                             ExpirationYear = (int) source.exp_year,
                             Fingerprint = source.fingerprint,
-                            LastFour = source.last4
+                            LastFour = source.last4,
+                            _cvcCheck = source.cvc_check
                         };
-                        switch ((string) source.cvc_check) {
-                            case "pass":
-                                card.CvcCheck = CvcCheckStatus.Pass;
-                                break;
-
-                            case "fail":
-                                card.CvcCheck = CvcCheckStatus.Fail;
-                                break;
-
-                            case "unavailable":
-                                card.CvcCheck = CvcCheckStatus.Unavailable;
-                                break;
-
-                            case "unchecked":
-                            default:
-                                card.CvcCheck = CvcCheckStatus.Unchecked;
-                                break;
-                        }
-
                         result.Add(card);
                     } else if (source["object"] == "bank_account") {
                         var bankAccount = new BankAccount

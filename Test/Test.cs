@@ -1,8 +1,5 @@
 ﻿using Stripe.Net.Customers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Stripe.Net.Test
 {
@@ -15,12 +12,14 @@ namespace Stripe.Net.Test
 
                 var stripe = new StripeService(apiKey);
 
-                stripe.AddCardAsync(
-                    "cus_9slVwRKZeS6dxa",
-                    8,
-                    2019,
-                    123,
-                    "4242424242424242").Wait();
+                //stripe.AddCardAsync(
+                //    "cus_9slVwRKZeS6dxa",
+                //    8,
+                //    2019,
+                //    123,
+                //    "4242424242424242").Wait();
+
+                stripe.GetCardAsync("cus_9slVwRKZeS6dxa", "card_19a4zPJB5O7unlMs4tvH3BEE").Wait();
 
                 Customer customer = stripe.GetCustomerAsync("cus_9slVwRKZeS6dxa").Result;
                 Console.WriteLine("Found customer {0}, {1}, {2}, {3}",
