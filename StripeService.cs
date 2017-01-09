@@ -11,6 +11,20 @@ namespace Stripe.Net
     public class StripeService
     {
         private readonly Client _client;
+        public bool HasError
+        {
+            get
+            {
+                return _client.HasError;
+            }
+        }
+        public StripeErrorResult Error
+        {
+            get
+            {
+                return _client.Error;
+            }
+        }
 
         public StripeService(string apiKey)
         {
@@ -25,12 +39,12 @@ namespace Stripe.Net
         /// <param name="email"></param>
         /// <param name="description"></param>
         /// <returns></returns>
-        public async Task CreateCustomerAsync(string email, string description)
+        public async Task<Customer> CreateCustomerAsync(string email, string description)
         {
             bool emailTaken = await EmailExistsAsync(email);
 
             if (emailTaken) {
-                return;
+                return null;
             }
 
             var formData = new List<KeyValuePair<string, string>>();
@@ -42,7 +56,10 @@ namespace Stripe.Net
 
             if (_client.HasError) {
                 // failed
+                return null;
             }
+
+            return result;
         }
 
         /// <summary>
@@ -71,7 +88,7 @@ namespace Stripe.Net
         /// <param name="cvc">A 3-4 digit confirmation number</param>
         /// <param name="number"></param>
         /// <returns></returns>
-        public async Task AddCardAsync(
+        public async Task<Card> AddCardAsync(
             string customerId,
             int expirationMonth,
             int expirationYear,
@@ -88,8 +105,7 @@ namespace Stripe.Net
             var tokenResult = await _client.PostFormDataAsync<dynamic>("tokens", formData);
 
             if (_client.HasError) {
-                // failed
-                return;
+                return null;
             }
             string token = tokenResult.id;
 
@@ -97,11 +113,13 @@ namespace Stripe.Net
 
             formData.Add(new KeyValuePair<string, string>("source", token));
 
-            var result = await _client.PostFormDataAsync<object>($"customers/{customerId}/sources", formData);
+            var result = await _client.PostFormDataAsync<Card>($"customers/{customerId}/sources", formData);
 
             if (_client.HasError) {
-                // failed
+                return null;
             }
+
+            return result;
         }
 
         /// <summary>
@@ -110,17 +128,20 @@ namespace Stripe.Net
         /// <param name="customerId"></param>
         /// <param name="cardId"></param>
         /// <returns></returns>
-        public async Task GetCardAsync(string customerId, string cardId)
+        public async Task<Card> GetCardAsync(string customerId, string cardId)
         {
             var result = await _client.GetJsonAsync<Card>($"customers/{customerId}/sources/{cardId}");
 
+            // retrieved bankaccount
             if (result.Object != "card") {
-                // retrieved bankaccount
+                return null;
             }
 
             if (_client.HasError) {
-                // failed
+                return null;
             }
+
+            return result;
         }
 
         /// <summary>
@@ -137,7 +158,7 @@ namespace Stripe.Net
         /// <param name="expirationMonth"></param>
         /// <param name="expirationYear"></param>
         /// <returns></returns>
-        public async Task UpdateCardAsync(
+        public async Task<Card> UpdateCardAsync(
             string customerId,
             string cardId,
             string city = null,
@@ -173,23 +194,22 @@ namespace Stripe.Net
             }
 
             if (!formData.Any()) {
-                return;
+                return null;
             }
 
-            var result = await _client.PostFormDataAsync<Card>($"customers/{customerId}/{cardId}", formData);
+            var result = await _client.PostFormDataAsync<Card>($"customers/{customerId}/sources/{cardId}", formData);
 
             if (_client.HasError) {
                 // failed
+                return null;
             }
+
+            return result;
         }
 
         public async Task DeleteCardAsync(string customerId, string cardId)
         {
             await _client.DeleteAsync($"customers/{customerId}/sources/{cardId}");
-
-            if (_client.HasError) {
-                // failed
-            }
         }
 
         /// <summary>
