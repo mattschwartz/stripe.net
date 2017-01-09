@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Stripe.Net", "Stripe.Net.xproj", "{C1A04309-4E3C-4057-8095-4E56E806E409}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Stripe.Net", "src\Stripe.Net.xproj", "{9B35AC35-AB8D-4BA0-A703-9A27CABBEE7A}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Test", "test\Test.xproj", "{18617230-03B0-4336-AFBB-E3B4A0077B55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C1A04309-4E3C-4057-8095-4E56E806E409}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C1A04309-4E3C-4057-8095-4E56E806E409}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C1A04309-4E3C-4057-8095-4E56E806E409}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C1A04309-4E3C-4057-8095-4E56E806E409}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B35AC35-AB8D-4BA0-A703-9A27CABBEE7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B35AC35-AB8D-4BA0-A703-9A27CABBEE7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B35AC35-AB8D-4BA0-A703-9A27CABBEE7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B35AC35-AB8D-4BA0-A703-9A27CABBEE7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18617230-03B0-4336-AFBB-E3B4A0077B55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18617230-03B0-4336-AFBB-E3B4A0077B55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18617230-03B0-4336-AFBB-E3B4A0077B55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18617230-03B0-4336-AFBB-E3B4A0077B55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
