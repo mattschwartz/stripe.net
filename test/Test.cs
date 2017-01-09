@@ -1,4 +1,5 @@
 ﻿using Stripe.Net.Cards;
+using Stripe.Net.Charges;
 using Stripe.Net.Customers;
 using System;
 
@@ -27,14 +28,17 @@ namespace Stripe.Net.Test
         public static void Main(string[] args)
         {
             try {
-                Test_CreateCustomer();
-                Test_CreateDuplicateCustomer();
-                Test_FetchCustomer();
+                //Test_CreateCustomer();
+                //Test_CreateDuplicateCustomer();
+                //Test_FetchCustomer();
 
-                Test_AddCardToCustomer();
-                Test_FetchCard();
-                Test_UpdateCard();
-                Test_DeleteCard();
+                //Test_AddCardToCustomer();
+                //Test_FetchCard();
+                //Test_UpdateCard();
+
+                Test_CreateCharge();
+
+                //Test_DeleteCard();
             } catch (TestFailedException ex) {
                 Console.WriteLine("[{0}]: {1}", Timestamp, ex.Message);
             } catch (Exception ex) {
@@ -223,6 +227,16 @@ namespace Stripe.Net.Test
                     stripe.Error.Message,
                     stripe.Error.Parameter);
             }
+
+            Console.WriteLine("pass");
+        }
+
+        private static void Test_CreateCharge()
+        {
+            Console.Write("[{0}] Test creating a charge... ", Timestamp);
+            var stripe = new StripeService(API_KEY);
+
+            Charge charge = stripe.CreateChargeAsync("cus_9tvLjBM1FynkwG", "card_19a82RJB5O7unlMsd398UwIG", 100).Result;
 
             Console.WriteLine("pass");
         }

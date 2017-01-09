@@ -1,4 +1,5 @@
-﻿using Stripe.Net.BankAccounts;
+﻿using Stripe.Net.Charges;
+using Stripe.Net.BankAccounts;
 using Stripe.Net.Cards;
 using Stripe.Net.Customers;
 using Stripe.Net.Http;
@@ -345,6 +346,36 @@ namespace Stripe.Net
             if (_client.HasError) {
                 // failed
             }
+        }
+
+        /// <summary>
+        /// Charges the specified customer with the specified payment method.
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="paymentMethodId"></param>
+        /// <param name="amount">Amount to charge as a 0-decimal currency; for USD, this means 100 is $1.00</param>
+        /// <param name="currency">Leave default if usd</param>
+        /// <returns></returns>
+        public async Task<Charge> CreateChargeAsync(
+            string customerId, 
+            string paymentMethodId,
+            int amount,
+            string currency = "usd")
+        {
+            var formData = new List<KeyValuePair<string, string>>();
+
+            formData.Add(new KeyValuePair<string, string>("amount", amount.ToString()));
+            formData.Add(new KeyValuePair<string, string>("currency", currency));
+            formData.Add(new KeyValuePair<string, string>("customer", customerId));
+            formData.Add(new KeyValuePair<string, string>("source", paymentMethodId));
+
+            var result = await _client.PostFormDataAsync<Charge>("charges", formData);
+
+            if (_client.HasError) {
+                return null;
+            }
+
+            return result;
         }
 
         private async Task<bool> EmailExistsAsync(string email)
