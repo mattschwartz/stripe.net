@@ -1,4 +1,5 @@
-﻿using Stripe.Net.Customers;
+﻿using Stripe.Net.BankAccounts;
+using Stripe.Net.Customers;
 using System;
 
 namespace Stripe.Net.Test
@@ -13,13 +14,12 @@ namespace Stripe.Net.Test
                 var stripe = new StripeService(apiKey);
 
                 //stripe.AddBankAccountAsync("cus_9slVwRKZeS6dxa", "testing1", AccountHolderType.Company, "000123456789", "110000000").Wait();
-                stripe.DeleteBankAccountAsync("cus_9slVwRKZeS6dxa", "ba_19a6biJB5O7unlMsgNMjDnIw").Wait();
 
-                Customer customer = stripe.GetCustomerAsync("cus_9slVwRKZeS6dxa").Result;
+                BankAccount account = stripe.GetBankAccountAsync("cus_9slVwRKZeS6dxa", "ba_19a6isJB5O7unlMsvJHOR9K8").Result;
+                Console.WriteLine("Bank account: {0}", account.AccountHolderName);
 
-                Console.WriteLine("Found customer {0}, {1}, {2}, {3}",
-                    customer.Id, customer.Email, customer.Description,
-                    customer.Created);
+                account = stripe.UpdateBankAccountAsync("cus_9slVwRKZeS6dxa", "ba_19a6isJB5O7unlMsvJHOR9K8", accountHolderName: "TESTING 2").Result;
+                Console.WriteLine("Bank account: {0}", account.AccountHolderName);
             } catch (Exception ex) {
                 Console.WriteLine("Exception: {0}\nInner Message: {1}\nStack Trace: {2}",
                     ex.Message,

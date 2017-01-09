@@ -124,7 +124,7 @@ namespace Stripe.Net
         }
 
         public async Task UpdateCardAsync(
-            string customerId, 
+            string customerId,
             string cardId,
             string city = null,
             string country = null,
@@ -197,7 +197,7 @@ namespace Stripe.Net
             string accountNumber,
             string routingNumber,
             string country = "US",
-            string currency= "usd")
+            string currency = "usd")
         {
             var formData = new List<KeyValuePair<string, string>>();
 
@@ -247,9 +247,45 @@ namespace Stripe.Net
             return result;
         }
 
-        public async Task UpdateBankAccountAsync(string customerId, string bankAccountId)
+        public async Task<BankAccount> UpdateBankAccountAsync(
+            string customerId,
+            string bankAccountId,
+            string accountHolderName = null,
+            AccountHolderType? accountHolderType = null)
         {
+            var formData = new List<KeyValuePair<string, string>>();
 
+            string accountHolderTypeValue;
+            switch (accountHolderType) {
+                case AccountHolderType.Individual:
+                    accountHolderTypeValue = "Individual";
+                    break;
+
+                case AccountHolderType.Company:
+                default:
+                    accountHolderTypeValue = "Company";
+                    break;
+            }
+
+            if (accountHolderName != null) {
+                formData.Add(new KeyValuePair<string, string>("account_holder_name", accountHolderName));
+            }
+            if (accountHolderType != null) {
+                formData.Add(new KeyValuePair<string, string>("account_holder_type", accountHolderTypeValue));
+            }
+
+            if (!formData.Any()) {
+                return null;
+            }
+
+            var result = await _client.PostFormDataAsync<BankAccount>($"customers/{customerId}/sources/{bankAccountId}", formData);
+
+            if (_client.HasError) {
+                // failed
+                return null;
+            }
+
+            return result;
         }
 
         public async Task DeleteBankAccountAsync(string customerId, string bankAccountId)
