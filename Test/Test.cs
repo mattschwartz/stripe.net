@@ -12,8 +12,8 @@ namespace Stripe.Net.Test
 
                 var stripe = new StripeService(apiKey);
 
-                stripe.AddBankAccountAsync("cus_9slVwRKZeS6dxa", "testing1", AccountHolderType.Company,
-                    "000123456789", "110000000").Wait();
+                //stripe.AddBankAccountAsync("cus_9slVwRKZeS6dxa", "testing1", AccountHolderType.Company, "000123456789", "110000000").Wait();
+                stripe.DeleteBankAccountAsync("cus_9slVwRKZeS6dxa", "ba_19a6biJB5O7unlMsgNMjDnIw").Wait();
 
                 Customer customer = stripe.GetCustomerAsync("cus_9slVwRKZeS6dxa").Result;
 

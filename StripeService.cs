@@ -174,10 +174,22 @@ namespace Stripe.Net
             await _client.DeleteAsync($"customers/{customerId}/sources/{cardId}");
 
             if (_client.HasError) {
-                // error
+                // failed
             }
         }
 
+        /// <summary>
+        /// Adds a <see cref="BankAccount"/> with the specified account details
+        /// to the specified user
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="accountHolderName"></param>
+        /// <param name="accountHolderType"></param>
+        /// <param name="accountNumber"></param>
+        /// <param name="routingNumber"></param>
+        /// <param name="country"></param>
+        /// <param name="currency"></param>
+        /// <returns></returns>
         public async Task AddBankAccountAsync(
             string customerId,
             string accountHolderName,
@@ -217,14 +229,36 @@ namespace Stripe.Net
             }
         }
 
-        public async Task GetBankAccountAsync(string customerId, string bankAccountId)
+        /// <summary>
+        /// Retrieves a <see cref="BankAccount"/> with the specified
+        /// id for the customer
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="bankAccountId"></param>
+        /// <returns></returns>
+        public async Task<BankAccount> GetBankAccountAsync(string customerId, string bankAccountId)
         {
+            var result = await _client.GetJsonAsync<BankAccount>($"customers/{customerId}/sources/{bankAccountId}");
 
+            if (_client.HasError) {
+                // failed
+            }
+
+            return result;
         }
 
         public async Task UpdateBankAccountAsync(string customerId, string bankAccountId)
         {
 
+        }
+
+        public async Task DeleteBankAccountAsync(string customerId, string bankAccountId)
+        {
+            await _client.DeleteAsync($"customers/{customerId}/sources/{bankAccountId}");
+
+            if (_client.HasError) {
+                // failed
+            }
         }
 
         private async Task<bool> EmailExistsAsync(string email)
