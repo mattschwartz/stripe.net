@@ -15,7 +15,12 @@ namespace Stripe.Net.Test
 
                 var stripe = new StripeService(apiKey);
 
-                stripe.CreateCustomerAsync("test1@example.com", "test 2").Wait();
+                stripe.AddCardAsync(
+                    "cus_9slVwRKZeS6dxa",
+                    8,
+                    2019,
+                    123,
+                    "4242424242424242").Wait();
 
                 Customer customer = stripe.GetCustomerAsync("cus_9slVwRKZeS6dxa").Result;
                 Console.WriteLine("Found customer {0}, {1}, {2}, {3}",

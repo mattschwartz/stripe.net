@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -12,6 +11,22 @@ namespace Stripe.Net.Http
     {
         private const string _stripeBaseUrl = "https://api.stripe.com/v1/";
         private string _apiKey;
+        private StripeErrorResult _lastError;
+
+        internal bool HasError
+        {
+            get
+            {
+                return _lastError != null;
+            }
+        }
+        internal StripeErrorResult Error
+        {
+            get
+            {
+                return _lastError;
+            }
+        }
 
         internal Client(string apiKey)
         {
@@ -23,6 +38,8 @@ namespace Stripe.Net.Http
             IEnumerable<KeyValuePair<string, string>> values)
             where T : class
         {
+            _lastError = null;
+
             using (var http = new HttpClient()) {
                 http.BaseAddress = new Uri(_stripeBaseUrl);
 
@@ -32,12 +49,13 @@ namespace Stripe.Net.Http
 
                 var content = new FormUrlEncodedContent(values);
                 HttpResponseMessage response = await http.PostAsync(requestUri, content);
+                string responseJson = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode) {
+                    var error = JsonConvert.DeserializeObject<StripeErrorResultContainer>(responseJson);
+                    _lastError = error?.Error;
                     return null;
                 }
-
-                string responseJson = await response.Content.ReadAsStringAsync();
 
                 return JsonConvert.DeserializeObject<T>(responseJson);
 
@@ -47,6 +65,8 @@ namespace Stripe.Net.Http
         internal async Task<T> PostJsonAsync<T>(string requestUri, object data)
             where T : class
         {
+            _lastError = null;
+
             using (var http = new HttpClient()) {
                 http.BaseAddress = new Uri(_stripeBaseUrl);
 
@@ -55,13 +75,15 @@ namespace Stripe.Net.Http
                 http.DefaultRequestHeaders.Add("authorization", $"Bearer {_apiKey}");
 
                 var content = new JsonContent(data);
+
                 HttpResponseMessage response = await http.PostAsync(requestUri, content);
+                string responseJson = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode) {
+                    var error = JsonConvert.DeserializeObject<StripeErrorResultContainer>(responseJson);
+                    _lastError = error?.Error;
                     return null;
                 }
-
-                string responseJson = await response.Content.ReadAsStringAsync();
 
                 return JsonConvert.DeserializeObject<T>(responseJson);
             }
@@ -70,6 +92,8 @@ namespace Stripe.Net.Http
         internal async Task<T> GetJsonAsync<T>(string requestUri)
             where T : class
         {
+            _lastError = null;
+
             using (var http = new HttpClient()) {
                 http.BaseAddress = new Uri(_stripeBaseUrl);
 
@@ -82,6 +106,7 @@ namespace Stripe.Net.Http
 
                 if (!response.IsSuccessStatusCode) {
                     var error = JsonConvert.DeserializeObject<StripeErrorResultContainer>(responseJson);
+                    _lastError = error?.Error;
                     return null;
                 }
 
