@@ -163,15 +163,4 @@ namespace Stripe.Net.Charges
         /// </summary>
         public const string WithdrawalCountLimitExceeded = "withdrawal_count_limit_exceeded";
     }
-
-    public static class BankDeclineCodeUtil
-    {
-        public static BankDeclineCode FromStripeDeclineCode(string code)
-        {
-            switch (code) {
-                default:
-                    return null;
-            }
-        }
-    }
 }
