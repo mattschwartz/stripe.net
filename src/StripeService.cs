@@ -225,7 +225,7 @@ namespace Stripe.Net
         /// <param name="country"></param>
         /// <param name="currency"></param>
         /// <returns></returns>
-        public async Task AddBankAccountAsync(
+        public async Task<BankAccount> AddBankAccountAsync(
             string customerId,
             string accountHolderName,
             AccountHolderType accountHolderType,
@@ -239,12 +239,12 @@ namespace Stripe.Net
             string accountHolderTypeValue;
             switch (accountHolderType) {
                 case AccountHolderType.Individual:
-                    accountHolderTypeValue = "Individual";
+                    accountHolderTypeValue = "individual";
                     break;
 
                 case AccountHolderType.Company:
                 default:
-                    accountHolderTypeValue = "Company";
+                    accountHolderTypeValue = "company";
                     break;
             }
 
@@ -259,9 +259,10 @@ namespace Stripe.Net
             var result = await _client.PostFormDataAsync<BankAccount>($"customers/{customerId}/sources", formData);
 
             if (_client.HasError) {
-                // failed
-                return;
+                return null;
             }
+
+            return result;
         }
 
         /// <summary>
@@ -302,12 +303,12 @@ namespace Stripe.Net
             string accountHolderTypeValue;
             switch (accountHolderType) {
                 case AccountHolderType.Individual:
-                    accountHolderTypeValue = "Individual";
+                    accountHolderTypeValue = "individual";
                     break;
 
                 case AccountHolderType.Company:
                 default:
-                    accountHolderTypeValue = "Company";
+                    accountHolderTypeValue = "company";
                     break;
             }
 

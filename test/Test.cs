@@ -1,4 +1,5 @@
-﻿using Stripe.Net.Cards;
+﻿using Stripe.Net.BankAccounts;
+using Stripe.Net.Cards;
 using Stripe.Net.Charges;
 using Stripe.Net.Customers;
 using System;
@@ -28,17 +29,22 @@ namespace Stripe.Net.Test
         public static void Main(string[] args)
         {
             try {
-                //Test_CreateCustomer();
-                //Test_CreateDuplicateCustomer();
-                //Test_FetchCustomer();
+                Test_CreateCustomer();
+                Test_CreateDuplicateCustomer();
+                Test_FetchCustomer();
 
-                //Test_AddCardToCustomer();
-                //Test_FetchCard();
-                //Test_UpdateCard();
+                Test_AddCardToCustomer();
+                Test_FetchCard();
+                Test_UpdateCard();
+
+                Test_AddBankAccountToCustomer();
+                Test_FetchBankAccount();
+                Test_UpdateBankAccount();
 
                 Test_CreateCharge();
 
-                //Test_DeleteCard();
+                Test_DeleteCard();
+                Test_DeleteBankAccount();
             } catch (TestFailedException ex) {
                 Console.WriteLine("[{0}]: {1}", Timestamp, ex.Message);
             } catch (Exception ex) {
@@ -223,6 +229,111 @@ namespace Stripe.Net.Test
             if (stripe.HasError) {
                 Console.WriteLine();
                 throw new TestFailedException("Delete card failed ({0}): {1} {2}",
+                    stripe.Error.Type,
+                    stripe.Error.Message,
+                    stripe.Error.Parameter);
+            }
+
+            Console.WriteLine("pass");
+        }
+
+        private static void Test_AddBankAccountToCustomer()
+        {
+            Console.Write("[{0}] Testing add bank account to customer... ", Timestamp);
+            var stripe = new StripeService(API_KEY);
+
+            BankAccount bankAccount = stripe.AddBankAccountAsync(
+                _testCustomerId,
+                Guid.NewGuid().ToString(),
+                AccountHolderType.Individual,
+                "000123456789",
+                "110000000").Result;
+
+            if (bankAccount == null) {
+                Console.WriteLine();
+                if (!stripe.HasError) {
+                    throw new TestFailedException("Add bank account failed for unknown reasons.");
+                }
+
+                throw new TestFailedException("Add bank account failed ({0}): {1} {2}",
+                    stripe.Error.Type,
+                    stripe.Error.Message,
+                    stripe.Error.Parameter);
+            }
+
+            _testBankAccountId = bankAccount.Id;
+
+            Console.WriteLine("pass");
+        }
+
+        private static void Test_FetchBankAccount()
+        {
+            Console.Write("[{0}] Testing fetch bank account from customer... ", Timestamp);
+            var stripe = new StripeService(API_KEY);
+
+            BankAccount bankAccount = stripe.GetBankAccountAsync(_testCustomerId, _testBankAccountId).Result;
+
+            if (bankAccount == null) {
+                Console.WriteLine();
+                if (!stripe.HasError) {
+                    throw new TestFailedException("Fetch bank account failed for unknown reasons.");
+                }
+
+                throw new TestFailedException("Fetch bank account failed ({0}): {1} {2}",
+                    stripe.Error.Type,
+                    stripe.Error.Message,
+                    stripe.Error.Parameter);
+            }
+
+            Console.WriteLine("pass");
+        }
+
+        private static void Test_UpdateBankAccount()
+        {
+            Console.Write("[{0}] Testing update bank account from customer... ", Timestamp);
+            var stripe = new StripeService(API_KEY);
+            string newAccountHolderName = Guid.NewGuid().ToString();
+
+            BankAccount bankAccount = stripe.UpdateBankAccountAsync(
+                _testCustomerId,
+                _testBankAccountId,
+                newAccountHolderName,
+                AccountHolderType.Company).Result;
+
+            if (bankAccount == null) {
+                Console.WriteLine();
+                if (!stripe.HasError) {
+                    throw new TestFailedException("Update bank account failed for unknown reasons.");
+                }
+
+                throw new TestFailedException("Update bank account failed ({0}): {1} {2}",
+                    stripe.Error.Type,
+                    stripe.Error.Message,
+                    stripe.Error.Parameter);
+            }
+
+            if (bankAccount.AccountHolderName != newAccountHolderName) {
+                Console.WriteLine();
+                throw new TestFailedException("Update bank account failed: account holder names differ");
+            }
+            if (bankAccount.AccountHolderType != AccountHolderType.Company) {
+                Console.WriteLine();
+                throw new TestFailedException("Update bank account failed: account holder types differ");
+            }
+
+            Console.WriteLine("pass");
+        }
+
+        private static void Test_DeleteBankAccount()
+        {
+            Console.Write("[{0}] Testing delete bank account from customer... ", Timestamp);
+            var stripe = new StripeService(API_KEY);
+
+            stripe.DeleteBankAccountAsync(_testCustomerId, _testBankAccountId).Wait();
+
+            if (stripe.HasError) {
+                Console.WriteLine();
+                throw new TestFailedException("Delete bank account failed ({0}): {1} {2}",
                     stripe.Error.Type,
                     stripe.Error.Message,
                     stripe.Error.Parameter);
