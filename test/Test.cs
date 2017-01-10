@@ -29,22 +29,24 @@ namespace Stripe.Net.Test
         public static void Main(string[] args)
         {
             try {
-                Test_CreateCustomer();
-                Test_CreateDuplicateCustomer();
-                Test_FetchCustomer();
+                var stripe = new StripeService(API_KEY);
+                var account = stripe.GetBankAccountAsync("cus_9uJl7IpB8QLBYi", "ba_19aV9LJB5O7unlMsi810Q5Wy").Result;
+                //Test_CreateCustomer();
+                //Test_CreateDuplicateCustomer();
+                //Test_FetchCustomer();
 
-                Test_AddCardToCustomer();
-                Test_FetchCard();
-                Test_UpdateCard();
+                //Test_AddCardToCustomer();
+                //Test_FetchCard();
+                //Test_UpdateCard();
 
-                Test_AddBankAccountToCustomer();
-                Test_FetchBankAccount();
-                Test_UpdateBankAccount();
+                //Test_AddBankAccountToCustomer();
+                //Test_FetchBankAccount();
+                //Test_UpdateBankAccount();
 
-                Test_CreateCharge();
+                //Test_CreateCharge();
 
-                Test_DeleteCard();
-                Test_DeleteBankAccount();
+                //Test_DeleteCard();
+                //Test_DeleteBankAccount();
             } catch (TestFailedException ex) {
                 Console.WriteLine("[{0}]: {1}", Timestamp, ex.Message);
             } catch (Exception ex) {
