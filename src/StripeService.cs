@@ -94,25 +94,27 @@ namespace Stripe.Net
             int expirationMonth,
             int expirationYear,
             int cvc,
-            string number)
+            string number,
+            string lineOne,
+            string lineTwo,
+            string city,
+            string zip,
+            string state)
         {
             var formData = new List<KeyValuePair<string, string>>();
 
-            formData.Add(new KeyValuePair<string, string>("card[exp_month]", expirationMonth.ToString()));
-            formData.Add(new KeyValuePair<string, string>("card[exp_year]", expirationYear.ToString()));
-            formData.Add(new KeyValuePair<string, string>("card[cvc]", cvc.ToString()));
-            formData.Add(new KeyValuePair<string, string>("card[number]", number));
+            formData.Add(new KeyValuePair<string, string>("source[object]", "card"));
+            formData.Add(new KeyValuePair<string, string>("source[exp_month]", expirationMonth.ToString()));
+            formData.Add(new KeyValuePair<string, string>("source[exp_year]", expirationYear.ToString()));
+            formData.Add(new KeyValuePair<string, string>("source[cvc]", cvc.ToString()));
+            formData.Add(new KeyValuePair<string, string>("source[number]", number));
 
-            var tokenResult = await _client.PostFormDataAsync<dynamic>("tokens", formData);
-
-            if (_client.HasError) {
-                return null;
-            }
-            string token = tokenResult.id;
-
-            formData = new List<KeyValuePair<string, string>>();
-
-            formData.Add(new KeyValuePair<string, string>("source", token));
+            formData.Add(new KeyValuePair<string, string>("source[address_city]", city));
+            formData.Add(new KeyValuePair<string, string>("source[address_country]", "US"));
+            formData.Add(new KeyValuePair<string, string>("source[address_line1]", lineOne));
+            formData.Add(new KeyValuePair<string, string>("source[address_line2]", lineTwo));
+            formData.Add(new KeyValuePair<string, string>("source[address_state]", state));
+            formData.Add(new KeyValuePair<string, string>("source[address_zip]", zip));
 
             var result = await _client.PostFormDataAsync<Card>($"customers/{customerId}/sources", formData);
 
@@ -167,6 +169,7 @@ namespace Stripe.Net
             string lineOne = null,
             string lineTwo = null,
             string zip = null,
+            string state = null,
             int? expirationMonth = null,
             int? expirationYear = null)
         {
@@ -186,6 +189,9 @@ namespace Stripe.Net
             }
             if (zip != null) {
                 formData.Add(new KeyValuePair<string, string>("address_zip", zip));
+            }
+            if (state != null) {
+                formData.Add(new KeyValuePair<string, string>("address_state", state));
             }
             if (expirationMonth != null) {
                 formData.Add(new KeyValuePair<string, string>("exp_month", expirationMonth.ToString()));

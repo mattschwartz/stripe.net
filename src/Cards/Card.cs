@@ -6,6 +6,10 @@ namespace Stripe.Net.Cards
     {
         [JsonProperty("cvc_check")]
         public string _cvcCheck { private get; set; }
+        [JsonProperty("address_line1_check")]
+        public string _addressLineOneCheck { private get; set; }
+        [JsonProperty("address_zip_check")]
+        public string _addressZipCheck { private get; set; }
 
         [JsonProperty("id")]
         public string Id { get; set; }
@@ -22,6 +26,9 @@ namespace Stripe.Net.Cards
         [JsonProperty("address_city")]
         public string AddressCity { get; set; }
 
+        [JsonProperty("address_state")]
+        public string AddressState { get; set; }
+
         [JsonProperty("address_country")]
         public string AddressCountry { get; set; }
 
@@ -34,23 +41,65 @@ namespace Stripe.Net.Cards
         [JsonProperty("address_zip")]
         public string AddressZip { get; set; }
 
-        public CvcCheckStatus CvcCheck
+        public VerificationStatus AddressLineOneCheck
+        {
+            get
+            {
+                switch (_addressLineOneCheck) {
+                    case "pass":
+                        return VerificationStatus.Pass;
+
+                    case "fail":
+                        return VerificationStatus.Fail;
+
+                    case "unavailable":
+                        return VerificationStatus.Unavailable;
+
+                    case "unchecked":
+                    default:
+                        return VerificationStatus.Unchecked;
+                }
+            }
+        }
+
+        public VerificationStatus AddressZipCheck
+        {
+            get
+            {
+                switch (_addressZipCheck) {
+                    case "pass":
+                        return VerificationStatus.Pass;
+
+                    case "fail":
+                        return VerificationStatus.Fail;
+
+                    case "unavailable":
+                        return VerificationStatus.Unavailable;
+
+                    case "unchecked":
+                    default:
+                        return VerificationStatus.Unchecked;
+                }
+            }
+        }
+
+        public VerificationStatus CvcCheck
         {
             get
             {
                 switch (_cvcCheck) {
                     case "pass":
-                        return CvcCheckStatus.Pass;
+                        return VerificationStatus.Pass;
 
                     case "fail":
-                        return CvcCheckStatus.Fail;
+                        return VerificationStatus.Fail;
 
                     case "unavailable":
-                        return CvcCheckStatus.Unavailable;
+                        return VerificationStatus.Unavailable;
 
                     case "unchecked":
                     default:
-                        return CvcCheckStatus.Unchecked;
+                        return VerificationStatus.Unchecked;
                 }
             }
         }

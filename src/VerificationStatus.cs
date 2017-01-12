@@ -1,6 +1,6 @@
 ﻿namespace Stripe.Net
 {
-    public enum CvcCheckStatus
+    public enum VerificationStatus
     {
         Pass = 0,
         Fail = 1,

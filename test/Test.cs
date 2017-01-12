@@ -30,7 +30,17 @@ namespace Stripe.Net.Test
         {
             try {
                 var stripe = new StripeService(API_KEY);
-                var account = stripe.GetBankAccountAsync("cus_9uJl7IpB8QLBYi", "ba_19aV9LJB5O7unlMsi810Q5Wy").Result;
+                Card card = stripe.AddCardAsync(
+                    "cus_9uJl7IpB8QLBYi",
+                    7,
+                    DateTime.Now.AddYears(3).Year,
+                    123,
+                    "4242424242424242",
+                    "123 Address St",
+                    null,
+                    "Austin",
+                    "78729",
+                    "TXASFWQERWQE").Result;
                 //Test_CreateCustomer();
                 //Test_CreateDuplicateCustomer();
                 //Test_FetchCustomer();
@@ -140,7 +150,12 @@ namespace Stripe.Net.Test
                 7,
                 DateTime.Now.AddYears(3).Year,
                 123,
-                "4242424242424242").Result;
+                "424242424242s242",
+                "123 Address St",
+                null,
+                "Austin",
+                "78729",
+                "TX").Result;
 
             if (card == null) {
                 Console.WriteLine();
