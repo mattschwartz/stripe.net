@@ -6,6 +6,8 @@ namespace Stripe.Net.Charges
     {
         [JsonProperty("failure_code")]
         public string _failureCode { private get; set; }
+        [JsonProperty("status")]
+        public string _status { get; set; }
 
         [JsonProperty("id")]
         public string Id { get; set; }
@@ -25,22 +27,26 @@ namespace Stripe.Net.Charges
         [JsonProperty("paid")]
         public bool Paid { get; set; }
 
-        [JsonProperty("status")]
-        public string Status { get; set; }
-
         [JsonProperty("outcome")]
         public ChargeOutcome Outcome { get; set; }
 
         [JsonProperty("failure_message")]
         public string FailureMessage { get; set; }
 
-        public CardFailureType? FailureType
+        public ChargeStatus Status
         {
             get
             {
-                switch (_failureCode) {
+                switch (_status) {
+                    case "succeeded":
+                        return ChargeStatus.Succeeded;
+
+                    case "pending":
+                        return ChargeStatus.Pending;
+
+                    case "failed":
                     default:
-                        return null;
+                        return ChargeStatus.Failed;
                 }
             }
         }
