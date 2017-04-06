@@ -1,5 +1,5 @@
 ﻿using Stripe.Net.Charges;
-using Stripe.Net.BankAccounts;
+using Stripe.Net.BankPaymentAccounts;
 using Stripe.Net.Cards;
 using Stripe.Net.Customers;
 using Stripe.Net.Http;
@@ -220,7 +220,7 @@ namespace Stripe.Net
         }
 
         /// <summary>
-        /// Adds a <see cref="BankAccount"/> with the specified account details
+        /// Adds a <see cref="BankPaymentAccount"/> with the specified account details
         /// to the specified user
         /// </summary>
         /// <param name="customerId"></param>
@@ -231,7 +231,7 @@ namespace Stripe.Net
         /// <param name="country"></param>
         /// <param name="currency"></param>
         /// <returns></returns>
-        public async Task<BankAccount> AddBankAccountAsync(
+        public async Task<BankPaymentAccount> AddBankAccountAsync(
             string customerId,
             string accountHolderName,
             AccountHolderType accountHolderType,
@@ -262,7 +262,7 @@ namespace Stripe.Net
             formData.Add(new KeyValuePair<string, string>("source[account_number]", accountNumber));
             formData.Add(new KeyValuePair<string, string>("source[routing_number]", routingNumber));
 
-            var result = await _client.PostFormDataAsync<BankAccount>($"customers/{customerId}/sources", formData);
+            var result = await _client.PostFormDataAsync<BankPaymentAccount>($"customers/{customerId}/sources", formData);
 
             if (_client.HasError) {
                 return null;
@@ -272,15 +272,15 @@ namespace Stripe.Net
         }
 
         /// <summary>
-        /// Retrieves a <see cref="BankAccount"/> with the specified
+        /// Retrieves a <see cref="BankPaymentAccount"/> with the specified
         /// id for the customer
         /// </summary>
         /// <param name="customerId"></param>
         /// <param name="bankAccountId"></param>
         /// <returns></returns>
-        public async Task<BankAccount> GetBankAccountAsync(string customerId, string bankAccountId)
+        public async Task<BankPaymentAccount> GetBankAccountAsync(string customerId, string bankAccountId)
         {
-            var result = await _client.GetJsonAsync<BankAccount>($"customers/{customerId}/sources/{bankAccountId}");
+            var result = await _client.GetJsonAsync<BankPaymentAccount>($"customers/{customerId}/sources/{bankAccountId}");
 
             if (_client.HasError) {
                 // failed
@@ -290,7 +290,7 @@ namespace Stripe.Net
         }
 
         /// <summary>
-        /// Updates <see cref="BankAccount"/> credentials with the supplied
+        /// Updates <see cref="BankPaymentAccount"/> credentials with the supplied
         /// values for the specified customer.
         /// </summary>
         /// <param name="customerId"></param>
@@ -298,7 +298,7 @@ namespace Stripe.Net
         /// <param name="accountHolderName"></param>
         /// <param name="accountHolderType"></param>
         /// <returns></returns>
-        public async Task<BankAccount> UpdateBankAccountAsync(
+        public async Task<BankPaymentAccount> UpdateBankAccountAsync(
             string customerId,
             string bankAccountId,
             string accountHolderName = null,
@@ -329,7 +329,7 @@ namespace Stripe.Net
                 return null;
             }
 
-            var result = await _client.PostFormDataAsync<BankAccount>($"customers/{customerId}/sources/{bankAccountId}", formData);
+            var result = await _client.PostFormDataAsync<BankPaymentAccount>($"customers/{customerId}/sources/{bankAccountId}", formData);
 
             if (_client.HasError) {
                 // failed
@@ -340,7 +340,7 @@ namespace Stripe.Net
         }
 
         /// <summary>
-        /// Removes the <see cref="BankAccount"/> from the specified customer
+        /// Removes the <see cref="BankPaymentAccount"/> from the specified customer
         /// with the specified bank account id
         /// </summary>
         /// <param name="customerId"></param>

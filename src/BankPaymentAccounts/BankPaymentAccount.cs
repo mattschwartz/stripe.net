@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace Stripe.Net.BankAccounts
+namespace Stripe.Net.BankPaymentAccounts
 {
-    public class BankAccount : StripePaymentMethod
+    public class BankPaymentAccount : StripePaymentMethod
     {
         [JsonProperty("status")]
         public string _status { private get; set; }

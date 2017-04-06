@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Stripe.Net.Cards;
-using Stripe.Net.BankAccounts;
+using Stripe.Net.BankPaymentAccounts;
 
 namespace Stripe.Net.Customers
 {
@@ -49,7 +49,7 @@ namespace Stripe.Net.Customers
                         };
                         result.Add(card);
                     } else if (source["object"] == "bank_account") {
-                        var bankAccount = new BankAccount
+                        var bankAccount = new BankPaymentAccount
                         {
                             Id = source.id,
                             Account = source.account,
