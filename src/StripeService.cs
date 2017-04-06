@@ -271,6 +271,26 @@ namespace Stripe.Net
             return result;
         }
 
+        public async Task<BankPaymentAccount> VerifyBankPaymentAccountAsync(
+            string customerId, 
+            string bankAccountId,
+            int verificationAmount1,
+            int verificationAmount2)
+        {
+            var formData = new List<KeyValuePair<string, string>>();
+
+            formData.Add(new KeyValuePair<string, string>("amounts[]", verificationAmount1.ToString()));
+            formData.Add(new KeyValuePair<string, string>("amounts[]", verificationAmount2.ToString()));
+
+            var result = await _client.PostFormDataAsync<BankPaymentAccount>($"customers/{customerId}/sources/{bankAccountId}/verify", formData);
+
+            if (_client.HasError) {
+                return null;
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// Retrieves a <see cref="BankPaymentAccount"/> with the specified
         /// id for the customer
