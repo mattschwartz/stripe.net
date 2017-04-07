@@ -6,6 +6,7 @@ using Stripe.Net.Http;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace Stripe.Net
 {
@@ -249,9 +250,11 @@ namespace Stripe.Net
                     break;
 
                 case AccountHolderType.Company:
-                default:
                     accountHolderTypeValue = "company";
                     break;
+                default:
+                    throw new ArgumentException(string.Format(
+                        "Invalid value for {0}", nameof(AccountHolderType)));
             }
 
             formData.Add(new KeyValuePair<string, string>("source[object]", "bank_account"));
@@ -369,10 +372,6 @@ namespace Stripe.Net
         public async Task DeleteBankAccountAsync(string customerId, string bankAccountId)
         {
             await _client.DeleteAsync($"customers/{customerId}/sources/{bankAccountId}");
-
-            if (_client.HasError) {
-                // failed
-            }
         }
 
         /// <summary>
